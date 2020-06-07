@@ -36,6 +36,10 @@ docker container run --rm -p 8000:8000 -p:81:81 -p 8080:8080  -v /tmp/cactusshar
 Test from Web:  
 http://x.x.x.x:81/cactus/index.html
 
+quik  Test from Web:
+http://136.244.112.140:81/cactus/index.html
+//I have deploy it on 136.244.112.140, you can simply test it though such way. It can't analysis video because of net situation.  
+
 
 Protocol:  
 cactus.proto  is the proto file.   
