@@ -2,15 +2,28 @@
 
 This is an application set of Machine  Learning which aims to apply the ML to our software easily.  It provided the GRPC interface so that you can run it in the network or integrate it into   your local software environment. More and more ML application interfaces would be included in the future. The following are supported currently.  
     
-(1)rpc StockPredict1(StockPredict1Req) returns (StockPredict1Rsp);  
+(1)  
+rpc StockPredict1(StockPredict1Req) returns (StockPredict1Rsp);  
 //this is an  auto trading  interface  for EurUs  by    Reinforcement  Learning. It's self-entertainment .  
-(2)rpc FaceDetect_Mt(FaceDetectReq) returns (FaceDetectRsp);  
+(2)  
+rpc FaceDetect_Mt(FaceDetectReq) returns (FaceDetectRsp);  
 //this is face detecting by mtcnn.  
+(3)  
 rpc FaceDetectAndIdentifyByPic_MFK(FaceDetectAndIdentifyByPicReq) returns (FaceDetectAndIdentifyByPicRsp);  
-//this is face detecting and identifying by mtcnn, facenet,knn.  
+//this is face detecting and identifying
+(4)  
+rpc FaceDetectAndIdentifyByPic_MFS(FaceDetectAndIdentifyByPicReq) returns (FaceDetectAndIdentifyByPicRsp);
+//this is face detecting and identifying. I desgin the identify net myself.
 rpc IdentifyPersonByThumbnails(IdentifyPersonByThumbnailsReq) returns (IdentifyPersonByThumbnailsRsp);  
 //unimplemented.  
-
+(5)  
+rpc AnalysisPicStreamStart(AnalysisPicStreamStartReq) returns(AnalysisPicStreamStartRsp);
+rpc AnalysisPicStreamPush(AnalysisPicStreamPushReq) returns(AnalysisPicStreamPushRsp);
+rpc AnalysisPicStreamPop(AnalysisPicStreamPopReq) returns(AnalysisPicStreamPopRsp);
+//Analysis video  
+(6)  
+rpc AnalysisPic(AnalysisPicReq)returns (AnalysisPicRsp);
+//Analysis image
 
 
 Install And Run From Docker:  
@@ -23,11 +36,6 @@ docker container run --rm -p 8000:8000 -p:81:81 -p 8080:8080  -v /tmp/cactusshar
 Test from Web:  
 http://x.x.x.x:81/cactus/index.html
 
-Run test  
-(1)install opencv,grpc in python environment first. Python 3.6 recommended.      
-cd cactusRelese/cactus/test (install from github)     or  cd /tmp/cactusshare/test(install from docker)  
-python test.py xxxxx:8000 xxxxx.mp4  
-  
 
 Protocol:  
 cactus.proto  is the proto file.   
