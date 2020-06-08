@@ -34,3 +34,50 @@ http://136.244.112.140:81/cactus/index.html
 
 
 
+
+Cactus is a project completed in spare time. It aims to integrate the ML achievement and form the Grpc Service In docker. 
+
+Supported Currently:
+
+(1)Face Detection, Face Recognition, Face Tracking. 
+(2)Pedestrian Detection, Pedestrian Tracking.
+
+(3)Vehicle Detection, Vehicle Tracking.
+
+(4)License Plate Detection, License Plate Tracking.
+
+Support in the near future. 
+
+(1)The object detection and classification near the traffic route.
+
+(2)the action of driver identification, like drinking, playing phone, driving in a  safe state, etc.
+
+(3)The part of body detection, like the ear, knee, etc. 
+
+(4)The text detection and identification. 
+
+Support in the future. 
+
+Automatic Speech Recognition. 
+
+Github:
+
+https://github.com/sailingzhang/cactusRelease.git
+
+Docker hub:
+
+docker pull sailingzhang/cactus:latest  
+
+You could experience it after deploying quickly.  
+
+Quick Experience: 
+
+http://136.244.112.140:81/cactus/index.html
+If you want to experience Analysing Video, please deploy it locally. 
+
+ML Customization:
+
+It can meet the needs of customization in an uncommon scene. 
+No need for any other machine for little data.  Need supplied GPU for medium or big data. 
+Satisfy the needs of performance optimization,  transplant to an embedded platform.
+
