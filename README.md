@@ -30,7 +30,7 @@ Install And Run From Docker:
 (1)  
 docker pull sailingzhang/cactus:latest  
 (2)  
-docker container run --rm -p 8000:8000 -p:81:81 -p 8080:8080  -v /tmp/cactusshare:/app/share -it sailingzhang/cactus:latest  /bin/bash 
+docker container run --rm -p 8000:8000 -p:81:81 -p 8080:8080 -v /tmp/cactusshare:/app/share -it sailingzhang/cactus:latest /bin/bash 
 
 
 Test from Web:  
