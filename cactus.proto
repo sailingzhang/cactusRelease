@@ -1,0 +1,339 @@
+syntax = "proto3";
+
+package Cactus;
+
+service Cactus {
+	rpc Hello(HelloReq) returns(HelloRsp);
+
+	///////////////////////stock predict////////////////////////////////////
+	rpc StockPredict1(StockPredict1Req) returns (StockPredict1Rsp);//closeprice
+	rpc FaceDetect_Mt(FaceDetectReq) returns (FaceDetectRsp);
+	rpc FaceDetect_ResNet152(FaceDetectReq) returns (FaceDetectRsp);
+	rpc FaceDetectAndIdentifyByPic_MFK(FaceDetectAndIdentifyByPicReq) returns (FaceDetectAndIdentifyByPicRsp);//mtcnn,facenet,knn 
+	rpc FaceDetectAndIdentifyByPic_MFS(FaceDetectAndIdentifyByPicReq) returns (FaceDetectAndIdentifyByPicRsp);//mtcnn,facenet,similar
+	rpc IdentifyPersonByThumbnails(IdentifyPersonByThumbnailsReq) returns (IdentifyPersonByThumbnailsRsp);
+	rpc AnalysisPicStreamStart(AnalysisPicStreamStartReq) returns(AnalysisPicStreamStartRsp);
+	rpc AnalysisPicStreamPush(AnalysisPicStreamPushReq) returns(AnalysisPicStreamPushRsp);
+	rpc AnalysisPicStreamPop(AnalysisPicStreamPopReq) returns(AnalysisPicStreamPopRsp);
+	rpc AnalysisPic(AnalysisPicReq)returns (AnalysisPicRsp);
+	
+}
+/////////////////////////////com///////////////////////////////////////////////////////////
+message Position{
+	float top = 1;
+	float left = 2;
+	float height =3;
+	float width = 4;
+}
+
+message  PersonInfo {
+	Position facepos = 1;
+	string personid = 2;
+	bool   isNewPerson = 3;
+}
+message  LicencePlateInfo {
+	Position licPos = 1;
+	string  licenceId = 2;
+}
+
+message  VehicleInfo {
+	Position  vehiclePos = 1;
+	LicencePlateInfo licenceplate = 2;
+}
+
+message PedestrianInfo{
+    Position  PedestrianPos = 1;
+}
+message ComDetectInfo{
+    int32 classId = 1;
+    string className = 2;
+    string Id = 3;
+    Position  Pos = 4;
+}
+////////////////////////////////////////////////////////////////////////////////////////
+message AnalysisPicReq{
+	int64 id = 1;
+	string groupid = 2;
+	bytes picdata = 3;
+}
+message AnalysisPicRsp {
+	int64 id = 1;
+	repeated PersonInfo person_infos = 2;
+    repeated VehicleInfo velicle_infos= 3;
+    repeated PedestrianInfo pedestrian_infos = 4;
+    repeated ComDetectInfo comdetect_infos = 5;
+	string error = 6;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+enum TrackStatus{
+	TRACK_NONE = 0;
+	TRACK_APPEAR = 1;
+	TRACK_TRACKING = 2;
+	TRACK_DISAPPEAR = 3;
+}
+
+message FaceTrack{
+	string person_id = 1;
+	string tracking_id = 2;
+	TrackStatus status = 3;
+	Position pos = 4;
+}
+
+message VehicleTrack{
+	string tracking_id = 1;
+	TrackStatus status = 2;
+	Position pos = 3;
+}
+
+message LicensePlateTrack{
+	string plate_id = 1;
+    string tracking_id = 2;
+	TrackStatus status = 3;
+	Position pos = 4;
+}
+
+message PedestrianTrack{
+    string tracking_id = 1;
+    TrackStatus status = 2;
+    Position pos = 3;
+}
+message AnalysisPicStreamStartReq{
+	string channel_name = 1;
+    string face_track_groupid = 2;
+    bool enable_face = 3;
+    bool enable_pedestrian = 4;
+    bool enable_vehicle = 5;
+    bool enable_plate = 6;
+}
+message AnalysisPicStreamStartRsp{
+	string error = 1;
+}
+
+message AnalysisPicStreamPushReq{
+	string channel_name = 1;
+	int64  frame_id = 2;
+	bytes  picdata = 3;
+}
+
+message AnalysisPicStreamPushRsp{
+	string error = 1;
+}
+
+message AnalysisPicStreamPopReq{
+	string channel_name = 1;
+}
+
+message AnalysisPicStreamPopRsp{
+	string error = 1;
+	string channel_name = 2;
+	int64  frame_id = 3;
+	repeated FaceTrack face_tracks = 4;
+    repeated VehicleTrack vehicle_tracks = 5;
+    repeated LicensePlateTrack  licenseplate_tracks = 6;
+    repeated PedestrianTrack  pedestrian_tracks = 7;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+enum FaceDetectType {
+	tf_mtcnn_detect = 0;
+	opvino_ResNet152_detect = 1;
+}
+enum IdentifyPersonType{
+	identify_person_none =0;
+	identify_person_mfk = 1;
+	identify_person_mfs = 2;
+}
+
+
+message StockPredict1_Configure{
+	string model_name = 1;
+	int64  model_version = 2;
+}
+
+message FaceDetect_Mt_Configure{
+	string mtcnn_modelname = 1;
+	int32 mtcnn_minifacesize = 2;
+	float mtcnn_factor = 3;
+	float mtcnn_pnet_threshold = 4;
+	float mtcnn_rnet_threshold = 5;
+	float mtcnn_onet_threshold = 6;	
+	int32 faceDetect_filter_minifacearea = 7;
+}
+
+
+message  FaceNet_Configure{
+	string modelname = 1;
+	int64 version = 2;
+	string signaturename = 3;
+	string inputname_data = 4;
+	string inputname_istrain = 5;
+	string outputname_0 = 6;
+}
+
+
+message  FaceNetSimilar_Configure{
+	string modelname = 1;
+	int64  version = 2;
+	string signaturename = 3;
+	string inputname_data = 4;
+	string inputname_istrain = 5;
+	string outputname_0 = 6;
+}
+message  FaceDetect_ResNet152{
+	string signaturename = 1;
+	int64 version = 2;
+	string inputname_0 = 3;
+	string outputname_0 = 4;
+}
+
+message FaceDetectAndIdentifyByPic_MFK_Configure {
+	// MtcnnConfigure mtcnnconfigure = 1;
+	FaceDetectType  detect_type = 1;
+	int32 faceDetect_filter_minifacearea = 2;	
+	float facenet_distance = 9;
+	string train_directory = 10;
+	string identify_directory = 11;
+	bool  is_auto_classify = 12;
+	float auto_video_newperson_max_distance = 13;// < facenet_distance will be disabled
+	float auto_addtrain_min_distance = 14;//< 0 will be disabled
+	int32  maxnumface_auto_classfiy = 15;
+	bool is_dump_addition = 16;
+
+}
+
+
+message FaceDetectAndIdentifyByPic_MFS_Configure {
+	//use the MFK detect
+	//use the MFK facenet emb;
+	FaceDetectType  detect_type = 1;
+	float prob_threshold = 2;
+	string train_directory = 3;
+	string identify_directory = 4;
+	bool  is_auto_classify = 5;
+	int32  maxnumface_auto_classfiy = 6;
+	bool  is_dump_addition = 7;
+}
+
+message AnalysisPic_Configure{
+	int32 frame_interval = 1;
+	FaceDetectType face_detect_type = 2;
+	IdentifyPersonType identify_person_type= 3;
+}
+
+message FaceNetConfigure{
+	string model_name = 1;
+}
+
+// message GroupInfo{
+// 	string groupname = 1;
+// }
+message CactusConfigure{
+	string ModelServer = 1;
+	string CactusServer = 2;
+	FaceNet_Configure    facenet_configure = 3;
+	FaceNetSimilar_Configure facenetsimilar_configure =4;
+	StockPredict1_Configure  stockpredict1_configure = 5;
+	FaceDetect_Mt_Configure   facedetect_mt_configure = 6;
+	FaceDetectAndIdentifyByPic_MFK_Configure facedetectandidentifybypic_mfk_configure = 7;
+	FaceDetectAndIdentifyByPic_MFS_Configure  facedetectandidentifybypic_mfs_configure =8;
+	AnalysisPic_Configure analysispic_configure =9;
+	map<string,string>  permanent_groupid_map = 10;
+	string StockPredict1_ModelName = 11;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+message facethumbnails{
+	string faceId = 1;
+	bytes faceThumbnail = 2;
+}
+message facePersons{
+	string faceId = 1;
+	string personId = 2;
+	bool   isNewPerson = 3;
+}
+
+message IdentifyPersonByThumbnailsReq{
+	int64 id = 1;
+	repeated  facethumbnails faces = 2;
+}
+message IdentifyPersonByThumbnailsRsp{
+	int64 id = 1;
+	repeated facePersons predictPersons = 2;
+	
+}
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+message FaceDetectReq{
+	int64 id = 1;
+	bytes picdata = 2;
+}
+message FaceDetectRsp{
+	int64 id = 1;
+	repeated Position positions = 2; 
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+message DetectAndIdentifyInfo{
+	float top = 1;
+	float left = 2;
+	float height =3;
+	float width = 4;
+	string personId = 5;
+	bool   isNewPerson = 6;
+}
+
+message FaceDetectAndIdentifyByPicReq{
+	int64 id = 1;
+	string groupid = 2;
+	bytes picdata = 3;
+}
+
+message FaceDetectAndIdentifyByPicRsp{
+	int64 id = 1;
+	string groupid = 2;
+	repeated DetectAndIdentifyInfo personinfos = 3;
+}
+////////////////////////////////////////////////////////////////////////////////////////
+enum STOCKOP{
+	HOLD = 0;
+	SELL = 1;
+	BUY = 2;
+	
+}
+
+message StockPredict1Req{
+	string model = 1;
+	repeated float closePrice = 2;
+	float holdPosition = 3;
+	float floatCaptionPoints = 4;
+}
+message StockPredict1Rsp{
+	STOCKOP op = 1;
+	string  error = 2;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+message HelloReq{
+	string  ask = 1;
+}
+message HelloRsp{
+	string response = 1;
+}
+
+
+
+
+// //////////////////////////////////Tensorflow Serving Http//////////////////////////////////////////////////////
+// message instances{
+
+// }
+// message TfsHttpInstancePredictReq{
+// 	string signature_name = 1;
+// 	repeated string instances
+// }
